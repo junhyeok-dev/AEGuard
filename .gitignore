@@ -1,6 +1,7 @@
 .idea
 images
 slices
+dataset
 AEGenerator.py
 result.csv
 result.xlsx
