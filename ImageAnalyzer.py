@@ -2,6 +2,8 @@ import cv2
 import sys
 import matplotlib.pyplot as plt
 import numpy as np
+from skimage.morphology import disk
+from scipy.stats import entropy
 
 img = None
 
@@ -15,6 +17,7 @@ else:
     img = cv2.imread(sys.argv[1])
 
 h, w = len(img), len(img[0])
+gs = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
 
 def __calcMean(image):
@@ -74,6 +77,7 @@ def backgroundDensityAnalysis(image):
     return 0
 
 
-print("전체 분산: ", totalVariance(cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)))
+print("전체 엔트로피: ", entropy(entropy(gs)))
+print("전체 분산: ", totalVariance(gs))
 print("엣지 밀도: ", edgeDensityAnalysis(img))
 print("색상 구성: ", colorCompositionAnalysis(img))
