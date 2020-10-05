@@ -1,8 +1,6 @@
 import cv2
 import sys
-import matplotlib.pyplot as plt
 import numpy as np
-from skimage.morphology import disk
 from scipy.stats import entropy
 
 img = None
@@ -10,11 +8,15 @@ img = None
 WINDOW_SIZE = 7
 STEP = 2
 
+is_adv = 1
+
 if len(sys.argv) != 2:
     print("Usage: python ImageAnalyzer.py [FILENAME]")
     exit(1)
 else:
     img = cv2.imread(sys.argv[1])
+    if sys.argv[1].startswith("adv"):
+        is_adv = 1
 
 h, w = len(img), len(img[0])
 gs = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -45,8 +47,6 @@ def totalVariance(image):
 
 def edgeDensityAnalysis(image):
     edge = cv2.Canny(image, 50, 100)
-    plt.imshow(edge,cmap="Greys")
-    plt.show()
 
     total_slc = 0
     slc_include_edge = 0
@@ -72,12 +72,48 @@ def colorCompositionAnalysis(image):
     return total
 
 
+def edgeNoiseAnalysis(image):
+    edge = cv2.Canny(image, 50, 100)
+
+    base = cv2.getGaussianKernel(3, 3)
+    kernel = np.outer(base, base.transpose())
+
+    arr = cv2.filter2D(edge, -1, kernel)
+
+    edgecount = 0
+    arrcount = 0
+
+    for i in range(w):
+        for j in range(h):
+            if arr[i][j] < 85:
+                arr[i][j] = 0
+            else:
+                arr[i][j] = 255
+                arrcount += 1
+
+            if edge[i][j] == 255:
+                edgecount += 1
+
+    return arrcount - edgecount
+
+
 def backgroundDensityAnalysis(image):
 
     return 0
 
+'''
+print("Total entropy: ", entropy(entropy(gs)))
+print("Total variance: ", totalVariance(gs))
+print("Edge density: ", edgeDensityAnalysis(img))
+print("Color composition (b, g, r): ", colorCompositionAnalysis(img))
+print("Edge diff after gaussian filtering: ", edgeNoiseAnalysis(img))
+'''
 
-print("전체 엔트로피: ", entropy(entropy(gs)))
-print("전체 분산: ", totalVariance(gs))
-print("엣지 밀도: ", edgeDensityAnalysis(img))
-print("색상 구성: ", colorCompositionAnalysis(img))
+cc = colorCompositionAnalysis(img)
+
+f = open('analysis_result.csv', 'a')
+f.write(
+    str(entropy(entropy(gs))) + ',' + str(totalVariance(gs)) + ',' +
+    str(edgeDensityAnalysis(img)) + ',' + str(cc[0]) + ',' + str(cc[1]) + ',' +
+    str(cc[2]) + ',' + str(edgeNoiseAnalysis(img)) + ',' + str(is_adv) + '\n'
+)
