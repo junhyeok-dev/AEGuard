@@ -8,15 +8,15 @@ img = None
 WINDOW_SIZE = 7
 STEP = 2
 
-is_adv = 1
+is_adv = "False"
 
 if len(sys.argv) != 2:
     print("Usage: python ImageAnalyzer.py [FILENAME]")
     exit(1)
 else:
     img = cv2.imread(sys.argv[1])
-    if sys.argv[1].startswith("adv"):
-        is_adv = 1
+    if sys.argv[1].startswith("./dataset/cifar100/adv"):
+        is_adv = "True"
 
 h, w = len(img), len(img[0])
 gs = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -94,7 +94,7 @@ def edgeNoiseAnalysis(image):
             if edge[i][j] == 255:
                 edgecount += 1
 
-    return arrcount - edgecount
+    return (arrcount - edgecount) / edgecount * 100
 
 
 def backgroundDensityAnalysis(image):
@@ -115,5 +115,5 @@ f = open('analysis_result.csv', 'a')
 f.write(
     str(entropy(entropy(gs))) + ',' + str(totalVariance(gs)) + ',' +
     str(edgeDensityAnalysis(img)) + ',' + str(cc[0]) + ',' + str(cc[1]) + ',' +
-    str(cc[2]) + ',' + str(edgeNoiseAnalysis(img)) + ',' + str(is_adv) + '\n'
+    str(cc[2]) + ',' + str(edgeNoiseAnalysis(img)) + ',' + is_adv + '\n'
 )
