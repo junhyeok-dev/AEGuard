@@ -1,7 +1,8 @@
 import cv2
 import sys
 import numpy as np
-from scipy.stats import entropy
+import matplotlib.pyplot as plt
+import skimage.measure
 
 img = None
 
@@ -69,8 +70,10 @@ def colorCompositionAnalysis(image):
             total[1] += g[i][j]
             total[2] += r[i][j]
 
-    return total
+    total_pix = sum(total)
+    total = [val / total_pix * 100 for val in total]
 
+    return total
 
 def edgeNoiseAnalysis(image):
     edge = cv2.Canny(image, 50, 100)
@@ -97,6 +100,11 @@ def edgeNoiseAnalysis(image):
     return (arrcount - edgecount) / edgecount * 100
 
 
+def edge_entropy(image):
+    edge = cv2.Canny(image, 50, 100)
+    return skimage.measure.shannon_entropy(edge)
+
+
 def backgroundDensityAnalysis(image):
 
     return 0
@@ -113,7 +121,7 @@ cc = colorCompositionAnalysis(img)
 
 f = open('analysis_result.csv', 'a')
 f.write(
-    str(entropy(entropy(gs))) + ',' + str(totalVariance(gs)) + ',' +
+    str(skimage.measure.shannon_entropy(gs)) + ',' + str(totalVariance(gs)) + ',' +
     str(edgeDensityAnalysis(img)) + ',' + str(cc[0]) + ',' + str(cc[1]) + ',' +
-    str(cc[2]) + ',' + str(edgeNoiseAnalysis(img)) + ',' + is_adv + '\n'
+    str(cc[2]) + ',' + str(edgeNoiseAnalysis(img)) + ',' + str(edge_entropy(img)) + ',' + is_adv + '\n'
 )
