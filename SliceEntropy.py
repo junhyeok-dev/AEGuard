@@ -17,7 +17,7 @@ adv = cv2.imread('images/adv_0.01.png')
 # Get height and width information from image
 h, w = len(origin), len(origin[0])
 
-# Generate grayscale image`
+# Generate grayscale image
 origin_gray = cv2.cvtColor(origin, cv2.COLOR_BGR2GRAY)
 adv_gray = cv2.cvtColor(adv, cv2.COLOR_BGR2GRAY)
 

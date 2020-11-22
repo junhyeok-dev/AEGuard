@@ -6,10 +6,10 @@ import skimage.measure
 
 img = None
 
-WINDOW_SIZE = 7
-STEP = 2
+WINDOW_SIZE = 16
+STEP = 16
 
-is_adv = "False"
+is_adv = 0
 
 if len(sys.argv) != 2:
     print("Usage: python ImageAnalyzer.py [FILENAME]")
@@ -17,7 +17,7 @@ if len(sys.argv) != 2:
 else:
     img = cv2.imread(sys.argv[1])
     if sys.argv[1].startswith("./dataset/cifar100/adv"):
-        is_adv = "True"
+        is_adv = 1
 
 h, w = len(img), len(img[0])
 gs = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -78,7 +78,7 @@ def colorCompositionAnalysis(image):
 def edgeNoiseAnalysis(image):
     edge = cv2.Canny(image, 50, 100)
 
-    base = cv2.getGaussianKernel(3, 3)
+    base = cv2.getGaussianKernel(5, 5)
     kernel = np.outer(base, base.transpose())
 
     arr = cv2.filter2D(edge, -1, kernel)
@@ -88,7 +88,7 @@ def edgeNoiseAnalysis(image):
 
     for i in range(w):
         for j in range(h):
-            if arr[i][j] < 85:
+            if arr[i][j] < 55:
                 arr[i][j] = 0
             else:
                 arr[i][j] = 255
@@ -96,6 +96,9 @@ def edgeNoiseAnalysis(image):
 
             if edge[i][j] == 255:
                 edgecount += 1
+
+    #print('arr: ', arr)
+    #print('edge: ', edge)
 
     return (arrcount - edgecount) / edgecount * 100
 
@@ -123,5 +126,5 @@ f = open('analysis_result.csv', 'a')
 f.write(
     str(skimage.measure.shannon_entropy(gs)) + ',' + str(totalVariance(gs)) + ',' +
     str(edgeDensityAnalysis(img)) + ',' + str(cc[0]) + ',' + str(cc[1]) + ',' +
-    str(cc[2]) + ',' + str(edgeNoiseAnalysis(img)) + ',' + str(edge_entropy(img)) + ',' + is_adv + '\n'
+    str(cc[2]) + ',' + str(edgeNoiseAnalysis(img)) + ',' + str(edge_entropy(img)) + ',' + str(is_adv) + '\n'
 )
