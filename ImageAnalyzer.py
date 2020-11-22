@@ -49,6 +49,9 @@ def totalVariance(image):
 def edgeDensityAnalysis(image):
     edge = cv2.Canny(image, 50, 100)
 
+    plt.imshow(edge)
+    plt.show()
+
     total_slc = 0
     slc_include_edge = 0
 
