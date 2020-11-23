@@ -37,3 +37,4 @@ AEGuard detects adversarial sample.
 
 ## Performance
 
+AEGuard shows 90.1043% detection accuracy for JSMA (e=0.1) adversarial samples. It is 12.94% higher than Grosse et al. (2018)

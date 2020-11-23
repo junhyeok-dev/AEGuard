@@ -47,7 +47,7 @@ def totalVariance(image):
 
 
 def edgeDensityAnalysis(image):
-    edge = cv2.Canny(image, 50, 100)
+    edge = cv2.Canny(image, 220, 440)
 
     plt.imshow(edge)
     plt.show()
@@ -79,7 +79,7 @@ def colorCompositionAnalysis(image):
     return total
 
 def edgeNoiseAnalysis(image):
-    edge = cv2.Canny(image, 50, 100)
+    edge = cv2.Canny(image, 220, 440)
 
     base = cv2.getGaussianKernel(5, 5)
     kernel = np.outer(base, base.transpose())
@@ -107,7 +107,7 @@ def edgeNoiseAnalysis(image):
 
 
 def edge_entropy(image):
-    edge = cv2.Canny(image, 50, 100)
+    edge = cv2.Canny(image, 220, 440)
     return skimage.measure.shannon_entropy(edge)
 
 
