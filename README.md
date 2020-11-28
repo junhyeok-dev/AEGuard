@@ -1,4 +1,7 @@
 # AEGuard
+
+![version](https://img.shields.io/badge/version-0.1-red) ![version](https://img.shields.io/badge/status-dev-red) ![version](https://img.shields.io/badge/build-passing-green) ![version](https://img.shields.io/badge/license-MIT-blue)
+
 ## Motivation
 
 As computer vision technology and image-based machine learning have developed and widespread, massive security systems based on image data are designed and deployed. At the same time, adversarial attack, the security attack that makes the image-based machine learning model misjudge by modulating input image, also has developed and widespread.
@@ -42,7 +45,7 @@ git clone https://github.com/junhyeok-dev/AEGuard.git
 
 ## How to use?
 
-
+Building executable binary.
 
 ## Performance
 
