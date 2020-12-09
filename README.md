@@ -1,6 +1,6 @@
 # AEGuard
 
-![version](https://img.shields.io/badge/version-1.0rc1-red) ![version](https://img.shields.io/badge/status-dev-red) ![version](https://img.shields.io/badge/build-passing-green) ![version](https://img.shields.io/badge/license-MIT-blue)
+![version](https://img.shields.io/badge/version-1.0rc1-blue) ![version](https://img.shields.io/badge/status-rc-red) ![version](https://img.shields.io/badge/build-passing-green) ![version](https://img.shields.io/badge/license-MIT-blue)
 
 ## Motivation
 
@@ -50,3 +50,4 @@ Building executable binary.
 ## Performance
 
 AEGuard shows 90.1043% detection accuracy for JSMA (e=0.1) adversarial samples. It is 12.94% higher than Grosse et al. (2018)
+
