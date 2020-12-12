@@ -8,3 +8,6 @@ exit
 AEGenerator.ipynb
 SliceEntropy.py
 test.png
+tester.py
+AEGenerator/*.png
+AEGenerator/*.jpg

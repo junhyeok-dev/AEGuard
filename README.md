@@ -1,6 +1,6 @@
 # AEGuard
 
-![version](https://img.shields.io/badge/version-1.0rc1-blue) ![version](https://img.shields.io/badge/status-rc-red) ![version](https://img.shields.io/badge/build-passing-green) ![version](https://img.shields.io/badge/license-MIT-blue)
+![version](https://img.shields.io/badge/version-1.0rc1-blue) ![version](https://img.shields.io/badge/status-rc-blue) ![version](https://img.shields.io/badge/build-passing-green) ![version](https://img.shields.io/badge/license-MIT-blue)
 
 ## Motivation
 

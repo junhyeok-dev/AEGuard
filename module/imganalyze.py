@@ -3,7 +3,7 @@ import numpy as np
 import skimage.measure
 
 
-def __calcMean(image):
+def calcMatrixMean(image):
     pixel_sum = 0
     size = 0
     for row in image:
@@ -14,6 +14,15 @@ def __calcMean(image):
     return pixel_sum / size
 
 
+def dctCoefficient(image):
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    image = np.float32(image) / 255.0
+    dct = cv2.dct(image)
+    image = np.uint8(dct * 255.0)
+
+    return image
+
+
 def totalEntropy(image):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
     return skimage.measure.shannon_entropy(image)
@@ -21,7 +30,7 @@ def totalEntropy(image):
 
 def totalVariance(image):
     image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    mean = __calcMean(image)
+    mean = calcMatrixMean(image)
     sum_distance = 0
     size = 0
     for row in image:
@@ -66,10 +75,10 @@ def colorCompositionAnalysis(image):
     return total
 
 
-def edgeNoiseAnalysis(image):
+def edgeNoiseAnalysis(image, p1, p2):
     h, w = len(image), len(image[0])
 
-    edge = cv2.Canny(image, 50, 100)
+    edge = cv2.Canny(image, p1, p2)
 
     base = cv2.getGaussianKernel(5, 5)
     kernel = np.outer(base, base.transpose())
@@ -93,6 +102,12 @@ def edgeNoiseAnalysis(image):
     return (arrcount - edgecount) / edgecount * 100
 
 
-def edge_entropy(image):
+def edgeNearbyRise(image):
+    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    edge = cv2.Canny(image, 50, 100)
+
+
+
+def edgeEntropy(image):
     edge = cv2.Canny(image, 50, 100)
     return skimage.measure.shannon_entropy(edge)

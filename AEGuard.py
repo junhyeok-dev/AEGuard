@@ -35,7 +35,7 @@ try:
     x.append(cc[1])
     x.append(cc[2])
     x.append(imganalyze.edgeNoiseAnalysis(image))
-    x.append(imganalyze.edge_entropy(image))
+    x.append(imganalyze.edgeEntropy(image))
 except cv2.error:
     print("Error: Invalid image source")
     exit(3)
