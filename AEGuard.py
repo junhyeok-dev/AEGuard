@@ -26,6 +26,7 @@ except OSError:
 scaler = load('Scaler.bin')
 
 x = []
+
 try:
     x.append(imganalyze.totalEntropy(image))
     x.append(imganalyze.totalVariance(image))
@@ -34,7 +35,7 @@ try:
     x.append(cc[0])
     x.append(cc[1])
     x.append(cc[2])
-    x.append(imganalyze.edgeNoiseAnalysis(image))
+    x.append(imganalyze.edgeNoiseAnalysis(image, 50, 100))
     x.append(imganalyze.edgeEntropy(image))
 except cv2.error:
     print("Error: Invalid image source")

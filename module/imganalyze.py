@@ -1,6 +1,8 @@
 import cv2
 import numpy as np
 import skimage.measure
+import matplotlib.pyplot as plt
+import threading
 
 
 def calcMatrixMean(image):
@@ -103,11 +105,29 @@ def edgeNoiseAnalysis(image, p1, p2):
 
 
 def edgeNearbyRise(image):
-    image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-    edge = cv2.Canny(image, 50, 100)
+    edge = cv2.Canny(image, 280, 560)
 
+    edges = []
 
+    for i in range(len(edge)):
+        for j in range(len(edge[0])):
+            if edge[i][j] == 255:
+                edges.append((i, j))
+
+    print(edges)
+    plt.imshow(edge)
+    plt.show()
+
+    return edge
 
 def edgeEntropy(image):
     edge = cv2.Canny(image, 50, 100)
     return skimage.measure.shannon_entropy(edge)
+
+
+def VisualizeEdge(image, p1, p2, title):
+    edge = cv2.Canny(image, p1, p2)
+
+    plt.title(title)
+    plt.imshow(edge)
+    plt.show()
