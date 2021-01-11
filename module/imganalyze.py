@@ -105,7 +105,7 @@ def edgeNoiseAnalysis(image, p1, p2):
 
 
 def edgeNearbyRise(image):
-    edge = cv2.Canny(image, 280, 560)
+    edge = cv2.Canny(image, 50, 100)
 
     edges = []
 
@@ -120,6 +120,7 @@ def edgeNearbyRise(image):
 
     return edge
 
+
 def edgeEntropy(image):
     edge = cv2.Canny(image, 50, 100)
     return skimage.measure.shannon_entropy(edge)
@@ -131,3 +132,7 @@ def VisualizeEdge(image, p1, p2, title):
     plt.title(title)
     plt.imshow(edge)
     plt.show()
+
+
+def quantifySharpness():
+    return 10

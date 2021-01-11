@@ -23,5 +23,5 @@ f = open('analysis_result.csv', 'a')
 f.write(
     str(imganalyze.totalEntropy(img)) + ',' + str(imganalyze.totalVariance(img)) + ',' +
     str(imganalyze.edgeDensityAnalysis(img)) + ',' + str(cc[0]) + ',' + str(cc[1]) + ',' +
-    str(cc[2]) + ',' + str(imganalyze.edgeNoiseAnalysis(img)) + ',' + str(imganalyze.edgeEntropy(img)) + ',' + str(is_adv) + '\n'
+    str(cc[2]) + ',' + str(imganalyze.edgeNoiseAnalysis(img, 50, 100)) + ',' + str(imganalyze.edgeEntropy(img)) + ',' + str(is_adv) + '\n'
 )

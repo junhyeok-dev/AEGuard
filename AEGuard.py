@@ -1,55 +1,58 @@
 import keras
 import sys
-from sklearn.preprocessing import StandardScaler
 from joblib import load
 import module.imganalyze as imganalyze
 import cv2
 
-model = None
-FILENAME = 'test.png'
-image = None
+def predict(fname):
+    image = cv2.imread(fname)
+    print("Selected image:", fname)
+    print("Image array:", image)
 
-if len(sys.argv) != 2:
-    print("Usage: python3 AEGuard.py [FILENAME]")
-    exit(1)
-else:
-    FILENAME = sys.argv[1]
+    try:
+        model = keras.models.load_model('AEGuard.h5')
+    except OSError:
+        print("Error: AEGuard.keras not found")
+        exit(2)
 
-image = cv2.imread(FILENAME)
+    x = []
 
-try:
-    model = keras.models.load_model('AEGuard.keras')
-except OSError:
-    print("Error: AEGuard.keras not found")
-    exit(2)
+    try:
+        x.append(imganalyze.totalEntropy(image))
+        x.append(imganalyze.totalVariance(image))
+        x.append(imganalyze.edgeDensityAnalysis(image))
+        cc = imganalyze.colorCompositionAnalysis(image)
+        x.append(cc[0])
+        x.append(cc[1])
+        x.append(cc[2])
+        x.append(imganalyze.edgeNoiseAnalysis(image, 50, 100))
+        x.append(imganalyze.edgeEntropy(image))
+    except cv2.error:
+        print("Error: Invalid image source")
+        exit(3)
 
-scaler = load('Scaler.bin')
+    x = [x]
 
-x = []
+    print('Prediction:', model.predict(x)[0][0])
 
-try:
-    x.append(imganalyze.totalEntropy(image))
-    x.append(imganalyze.totalVariance(image))
-    x.append(imganalyze.edgeDensityAnalysis(image))
-    cc = imganalyze.colorCompositionAnalysis(image)
-    x.append(cc[0])
-    x.append(cc[1])
-    x.append(cc[2])
-    x.append(imganalyze.edgeNoiseAnalysis(image, 50, 100))
-    x.append(imganalyze.edgeEntropy(image))
-except cv2.error:
-    print("Error: Invalid image source")
-    exit(3)
+    result = model.predict(x)[0][0]
 
-x = [x]
+    res_txt = ""
 
-x = scaler.fit_transform(x)
+    if result < 0.5:
+        res_txt = fname + ' is a normal image'
+    else:
+        res_txt = fname + ' is an adversarial sample'
 
-print('Prediction:', model.predict(x)[0][0])
+    print(res_txt)
 
-result = model.predict(x)[0][0]
+    return res_txt
 
-if result < 0.5:
-    print(FILENAME, 'is a normal image')
-else:
-    print(FILENAME, 'is an adversarial sample')
+if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        print("Usage: python3 AEGuard.py [FILENAME]")
+        exit(1)
+    else:
+        fname = sys.argv[1]
+        res_txt = predict(fname)
+        print(res_txt)
