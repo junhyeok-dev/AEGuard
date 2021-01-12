@@ -18,6 +18,7 @@ AEGuard is an adversarial sample detection model based on edge noise features, w
 * Python 3
   * IPython 7.18.1 or greater
   * Tensorflow 2.3.0 or greater
+  * Keras 2.4.3 or greater
   * Scikit-image 0.17.2 or greater
   * Scikit-learn 0.23.2 or greater
   * Numpy 1.18.5 or greater

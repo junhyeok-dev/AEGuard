@@ -1,7 +1,6 @@
 import keras
 import sys
-from joblib import load
-import module.imganalyze as imganalyze
+import ImageFeatures
 import cv2
 
 def predict(fname):
@@ -18,15 +17,15 @@ def predict(fname):
     x = []
 
     try:
-        x.append(imganalyze.totalEntropy(image))
-        x.append(imganalyze.totalVariance(image))
-        x.append(imganalyze.edgeDensityAnalysis(image))
-        cc = imganalyze.colorCompositionAnalysis(image)
+        x.append(ImageFeatures.entropy(image))
+        x.append(ImageFeatures.variance(image))
+        x.append(ImageFeatures.edge.density(image))
+        cc = ImageFeatures.colorCompose(image)
         x.append(cc[0])
         x.append(cc[1])
         x.append(cc[2])
-        x.append(imganalyze.edgeNoiseAnalysis(image, 50, 100))
-        x.append(imganalyze.edgeEntropy(image))
+        x.append(ImageFeatures.edge.noise(image, 50, 100))
+        x.append(ImageFeatures.edge.entropy(image))
     except cv2.error:
         print("Error: Invalid image source")
         exit(3)
