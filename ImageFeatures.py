@@ -2,7 +2,6 @@ import cv2
 import numpy as np
 import skimage.measure
 import matplotlib.pyplot as plt
-import threading
 
 
 def mean2d(image):
@@ -61,32 +60,37 @@ def colorCompose(image):
 
 
 class edge():
-    def density(self, image):
+    @staticmethod
+    def __autoCanny(image):
+        return cv2.Canny(image, 50, 100)
+
+    @staticmethod
+    def density(image):
         h, w = len(image), len(image[0])
 
-        edge = cv2.Canny(image, 50, 100)
+        e = edge.__autoCanny(image)
 
         total_slc = 0
         slc_include_edge = 0
 
         for i in range(w):
             for j in range(h):
-                if edge[i][j] == 255:
+                if e[i][j] == 255:
                     slc_include_edge += 1
                 total_slc += 1
 
         return (slc_include_edge / total_slc) * 100
 
-
-    def noise(self, image, p1, p2):
+    @staticmethod
+    def noise(image):
         h, w = len(image), len(image[0])
 
-        edge = cv2.Canny(image, p1, p2)
+        e = edge.__autoCanny(image)
 
         base = cv2.getGaussianKernel(5, 5)
         kernel = np.outer(base, base.transpose())
 
-        arr = cv2.filter2D(edge, -1, kernel)
+        arr = cv2.filter2D(e, -1, kernel)
 
         edgecount = 0.0
         arrcount = 0.0
@@ -96,31 +100,44 @@ class edge():
                 if arr[i][j] > 55:
                     arrcount += 1
 
-                if edge[i][j] == 255:
+                if e[i][j] == 255:
                     edgecount += 1
 
         return (arrcount - edgecount) / edgecount * 100
 
-
-    def gradient(self, image, slice_size):
+    @staticmethod
+    def gradient(image, slice_size):
         h, w = len(image), len(image[0])
+        half_slice_size = int(slice_size / 2)
 
-        edge = cv2.Canny(image, 50, 100)
+        e = edge.__autoCanny(image)
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-        for i in range(0, )
+        for i in range(h):
+            for j in range(w):
+                if e[i][j] == 255:
+                    slice_e = e[i - half_slice_size:i + half_slice_size, j - half_slice_size:j + half_slice_size]
+                    slice_o = image[i - half_slice_size:i + half_slice_size, j - half_slice_size:j + half_slice_size]
 
-    def entropy(self, image):
-        edge = cv2.Canny(image, 50, 100)
-        return skimage.measure.shannon_entropy(edge)
+                    plt.imshow(slice_e)
+                    plt.show()
+
+                    plt.imshow(slice_o)
+                    plt.show()
+
+                    print(slice_o)
+                    print(slice_e)
 
 
-    def visualize(self, image, p1, p2, title):
-        edge = cv2.Canny(image, p1, p2)
+    @staticmethod
+    def entropy(image):
+        e = edge.__autoCanny(image)
+        return skimage.measure.shannon_entropy(e)
+
+    @staticmethod
+    def visualize(image, title):
+        e = edge.__autoCanny(image)
 
         plt.title(title)
-        plt.imshow(edge)
+        plt.imshow(e)
         plt.show()
-
-
-def quantifySharpness():
-    return 10
