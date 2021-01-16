@@ -61,7 +61,7 @@ def colorCompose(image):
 
 
 class edge():
-    def density(image):
+    def density(self, image):
         h, w = len(image), len(image[0])
 
         edge = cv2.Canny(image, 50, 100)
@@ -78,7 +78,7 @@ class edge():
         return (slc_include_edge / total_slc) * 100
 
 
-    def noise(image, p1, p2):
+    def noise(self, image, p1, p2):
         h, w = len(image), len(image[0])
 
         edge = cv2.Canny(image, p1, p2)
@@ -88,15 +88,12 @@ class edge():
 
         arr = cv2.filter2D(edge, -1, kernel)
 
-        edgecount = 0
-        arrcount = 0
+        edgecount = 0.0
+        arrcount = 0.0
 
         for i in range(w):
             for j in range(h):
-                if arr[i][j] < 55:
-                    arr[i][j] = 0
-                else:
-                    arr[i][j] = 255
+                if arr[i][j] > 55:
                     arrcount += 1
 
                 if edge[i][j] == 255:
@@ -105,29 +102,19 @@ class edge():
         return (arrcount - edgecount) / edgecount * 100
 
 
-    def nearbyRise(image):
+    def gradient(self, image, slice_size):
+        h, w = len(image), len(image[0])
+
         edge = cv2.Canny(image, 50, 100)
 
-        edges = []
+        for i in range(0, )
 
-        for i in range(len(edge)):
-            for j in range(len(edge[0])):
-                if edge[i][j] == 255:
-                    edges.append((i, j))
-
-        print(edges)
-        plt.imshow(edge)
-        plt.show()
-
-        return edge
-
-
-    def entropy(image):
+    def entropy(self, image):
         edge = cv2.Canny(image, 50, 100)
         return skimage.measure.shannon_entropy(edge)
 
 
-    def visualize(image, p1, p2, title):
+    def visualize(self, image, p1, p2, title):
         edge = cv2.Canny(image, p1, p2)
 
         plt.title(title)

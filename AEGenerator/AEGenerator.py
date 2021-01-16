@@ -11,6 +11,7 @@ if len(sys.argv) != 2:
 
 filename = sys.argv[1]
 
+
 def preprocess(image):
     image = tf.cast(image, tf.float32)
     image = tf.image.resize(image, (224, 224))
@@ -18,8 +19,10 @@ def preprocess(image):
     image = image[None, ...]
     return image
 
+
 def get_imagenet_label(probs):
     return decode_predictions(probs, top=1)[0][0]
+
 
 model = tf.keras.applications.MobileNetV2(include_top=True, weights='imagenet')
 model.trainable = False
@@ -36,6 +39,7 @@ image_probs = model.predict(image)
 
 loss_object = tf.keras.losses.CategoricalCrossentropy()
 
+
 def create_adversarial_pattern(input_image, input_label):
     with tf.GradientTape() as tape:
         tape.watch(input_image)
@@ -46,6 +50,7 @@ def create_adversarial_pattern(input_image, input_label):
 
     signed_grad = tf.sign(gradient)
     return signed_grad
+
 
 index = 208
 label = tf.one_hot(index, image_probs.shape[-1])
@@ -59,10 +64,12 @@ descriptions = [('Epsilon = {:0.3f}'.format(eps) if eps else 'Input')
                 for eps in epsilons]
 
 _, image_class, class_confidence = get_imagenet_label(image_probs)
+print(image_class)
 
 for i, eps in enumerate(epsilons):
     adv_x = image + eps*perturbations
-    #_, l, c = get_imagenet_label(model.predict(adv_x))
+    _, l, c = get_imagenet_label(model.predict(adv_x))
+    print(l)
     if eps == 0:
         tf.keras.preprocessing.image.save_img('org_' + filename + '.png', adv_x[0])
     else:

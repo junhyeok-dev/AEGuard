@@ -2,14 +2,15 @@ import keras
 import sys
 import ImageFeatures
 import cv2
+import tensorflow as tf
 
 def predict(fname):
     image = cv2.imread(fname)
-    print("Selected image:", fname)
-    print("Image array:", image)
+
+    image = cv2.resize(image, (224, 224))
 
     try:
-        model = keras.models.load_model('AEGuard.h5')
+        model = keras.models.load_model('AEGuard.keras')
     except OSError:
         print("Error: AEGuard.keras not found")
         exit(2)
