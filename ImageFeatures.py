@@ -2,6 +2,7 @@ import cv2
 import numpy as np
 import skimage.measure
 import matplotlib.pyplot as plt
+import time
 
 
 def mean2d(image):
@@ -61,8 +62,19 @@ def colorCompose(image):
 
 class edge():
     @staticmethod
-    def __autoCanny(image):
-        return cv2.Canny(image, 50, 100)
+    def __autoCanny(image, sigma=0.20, verbose=True):
+        med = np.median(image)
+        l = int(max(0, (1.0 - sigma) * med))
+        u = int(min(255, (1.0 + sigma) * med))
+
+        e = cv2.Canny(image, l, u)
+
+        if verbose:
+            print("l:", l, "u:", u)
+            plt.imshow(e)
+            plt.show()
+
+        return e
 
     @staticmethod
     def density(image):
@@ -106,27 +118,51 @@ class edge():
         return (arrcount - edgecount) / edgecount * 100
 
     @staticmethod
-    def gradient(image, slice_size):
+    def gradient(image, slice_size, steps=1, verbose=True):
         h, w = len(image), len(image[0])
         half_slice_size = int(slice_size / 2)
 
         e = edge.__autoCanny(image)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
 
-        for i in range(h):
-            for j in range(w):
+        start = time.time()
+
+        cnt = 0
+        ent = 0
+
+        for i in range(half_slice_size, h - half_slice_size, steps):
+            for j in range(half_slice_size, w - half_slice_size, steps):
                 if e[i][j] == 255:
-                    slice_e = e[i - half_slice_size:i + half_slice_size, j - half_slice_size:j + half_slice_size]
-                    slice_o = image[i - half_slice_size:i + half_slice_size, j - half_slice_size:j + half_slice_size]
+                    l, r, u, b = j - half_slice_size, j + half_slice_size, i - half_slice_size, i + half_slice_size
+                    slice_e = e[u:b, l:r]
+                    slice_o = image[u:b, l:r]
 
-                    plt.imshow(slice_e)
-                    plt.show()
+                    #plt.imshow(slice_e);plt.show()
+                    #plt.imshow(slice_o);plt.show()
 
-                    plt.imshow(slice_o)
-                    plt.show()
+                    #print(slice_o)
+                    #print(slice_e)
 
-                    print(slice_o)
-                    print(slice_e)
+                    diff_h_sum = 0
+                    diff_h_count = 0
+
+                    for si in range(1, slice_size - 1):
+                        for sj in range(1, slice_size - 1):
+                            if slice_e[si][sj] == 255:
+                                diff_h = abs(slice_o[si][sj - 1] - slice_o[si][sj + 1])
+                                #print("diff:", diff_h)
+
+                                diff_h_sum += diff_h
+                                diff_h_count += 1
+
+                    ent += (diff_h_sum / diff_h_count)
+                    cnt += 1
+
+
+
+        if verbose:
+            print("CPU Time:", time.time() - start)
+            print("Edge diff:", ent / cnt)
 
 
     @staticmethod

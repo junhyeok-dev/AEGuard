@@ -25,7 +25,7 @@ def predict(fname):
         x.append(cc[0])
         x.append(cc[1])
         x.append(cc[2])
-        x.append(ImageFeatures.edge.noise(image, 50, 100))
+        x.append(ImageFeatures.edge.noise(image))
         x.append(ImageFeatures.edge.entropy(image))
     except cv2.error:
         print("Error: Invalid image source")

@@ -59,7 +59,7 @@ label = tf.reshape(label, (1, image_probs.shape[-1]))
 perturbations = create_adversarial_pattern(image, label)
 plt.imshow(perturbations[0]*0.5+0.5)
 
-epsilons = [0, 0.1, 0.01]
+epsilons = [0, 0.01]
 descriptions = [('Epsilon = {:0.3f}'.format(eps) if eps else 'Input')
                 for eps in epsilons]
 
@@ -69,10 +69,11 @@ print(image_class)
 for i, eps in enumerate(epsilons):
     adv_x = image + eps*perturbations
     _, l, c = get_imagenet_label(model.predict(adv_x))
-    print(l)
+
     if eps == 0:
         tf.keras.preprocessing.image.save_img('org_' + filename + '.png', adv_x[0])
     else:
-        tf.keras.preprocessing.image.save_img('adv_' + filename + '_' + str(eps) + '.png', adv_x[0])
+        if image_class != l:
+            tf.keras.preprocessing.image.save_img('adv_' + filename + '.png', adv_x[0])
     adv_x = tf.clip_by_value(adv_x, -1, 1)
 
