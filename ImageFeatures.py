@@ -98,11 +98,15 @@ class edge():
         h, w = len(image), len(image[0])
 
         e = edge.__autoCanny(image)
+        plt.imshow(e)
+        plt.show()
 
         base = cv2.getGaussianKernel(5, 5)
         kernel = np.outer(base, base.transpose())
 
         arr = cv2.filter2D(e, -1, kernel)
+        plt.imshow(arr)
+        plt.show()
 
         edgecount = 0.0
         arrcount = 0.0
@@ -111,9 +115,15 @@ class edge():
             for j in range(h):
                 if arr[i][j] > 55:
                     arrcount += 1
+                    arr[i][j] = 255
+                else:
+                    arr[i][j] = 0
 
                 if e[i][j] == 255:
                     edgecount += 1
+
+        plt.imshow(arr)
+        plt.show()
 
         return (arrcount - edgecount) / edgecount * 100
 
