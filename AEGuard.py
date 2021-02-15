@@ -1,8 +1,8 @@
 import keras
 import sys
-import ImageFeatures
+from FeatureExtraction.modules import ImageFeatures
 import cv2
-import tensorflow as tf
+
 
 def predict(fname):
     image = cv2.imread(fname)
