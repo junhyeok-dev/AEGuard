@@ -143,7 +143,7 @@ class edge():
                 if e[i][j] == 255:
                     edgecount += 1
 
-        return (arrcount - edgecount) / edgecount * 100
+        return (arrcount - edgecount) / (edgecount + 1) * 100
 
     @staticmethod
     def gradient(image, slice_size, steps=1, verbose=False):

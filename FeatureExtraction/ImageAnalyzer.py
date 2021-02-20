@@ -16,7 +16,7 @@ else:
 
 cc = ImageFeatures.colorCompose(img)
 
-f = open('analysis_result.csv', 'a')
+f = open('analysis_result_0.01.csv', 'a')
 f.write(
     str(ImageFeatures.entropy(img)) + ',' + str(ImageFeatures.variance(img)) + ',' + str(ImageFeatures.dctBias2d(img)) + ',' +
     str(ImageFeatures.edge.density(img)) + ',' + str(cc[0]) + ',' + str(cc[1]) + ',' +

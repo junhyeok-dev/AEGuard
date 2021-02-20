@@ -20,8 +20,9 @@ def predict(fname):
     try:
         x.append(ImageFeatures.entropy(image))
         x.append(ImageFeatures.variance(image))
-        x.append(ImageFeatures.edge.density(image))
+        x.append(ImageFeatures.dctBias2d(image))
         cc = ImageFeatures.colorCompose(image)
+        x.append(ImageFeatures.edge.density(image))
         x.append(cc[0])
         x.append(cc[1])
         x.append(cc[2])
